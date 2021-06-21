@@ -1,7 +1,7 @@
 pipeline {
     agent { 
         dockerfile {
-            filename 'Dockerfile'
+            filename 'dockerfile'
             args '-v /.cache/ -v /.bower/  -v /.config/configstore/'
         }
     }
