@@ -1,10 +1,5 @@
 pipeline {
-    agent { 
-        dockerfile {
-            filename 'dockerfile'
-            args '-v /.cache/ -v /.bower/  -v /.config/configstore/'
-        }
-    }
+    agent { dockerfile true }
     stages {
         stage('Test') {
             steps {
