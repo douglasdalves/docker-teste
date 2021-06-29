@@ -1,0 +1,12 @@
+
+
+# build - do dockerfile para uma imagem local
+    docker build -t doug18dalves/docker-teste .
+
+# push - envio para o repositorio
+    docker push doug18dalves/docker-teste
+
+# run - criação do container
+    docker run -d --name docker_html -p 6060:3000 docker_html
+
+- docker com css / html com URL na porta 3000
