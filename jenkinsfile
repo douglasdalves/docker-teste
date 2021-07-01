@@ -1,9 +1,23 @@
 pipeline {
-    agent { dockerfile true }
+    agent any
+    environment {
+        JOB_DISPLAY_URL = 'doug18dalves/docker-teste:v2'
+    }
     stages {
-        stage('Test') {
+        stage("build de imagem") {
             steps {
-                sh 'node --version'
+                sh 'docker build -t ${JOB_DISPLAY_URL} .'
+                echo '-----------------'
+                sh 'docker images | grep docker-teste'
+                echo '-----------------'
+            }
+        }
+        stage("deploy da imagem") {
+            steps {
+                sh 'docker run -d --name docker_html -p 6060:3000 ${JOB_DISPLAY_URL}'
+                echo '-----------------'
+                sh 'docker ps | grep docker_html'
+                echo '-----------------'
             }
         }
     }
