@@ -1,9 +1,11 @@
 def gv
+gv = load "script.groovy"
 
 pipeline {
     agent any
     environment {
         JOB_DISPLAY_URL = 'doug18dalves/docker-teste:v2'
+        DOCKERHUB_CREDENTIALS = credentials('acesso_docker_hub')
     }
     stages {
         stage("build da imagem") {
