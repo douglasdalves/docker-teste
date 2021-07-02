@@ -1,10 +1,12 @@
+def gv
+
 pipeline {
     agent any
     environment {
         JOB_DISPLAY_URL = 'doug18dalves/docker-teste:v2'
     }
     stages {
-        stage("build de imagem") {
+        stage("build da imagem") {
             steps {
                 sh 'docker build -t ${JOB_DISPLAY_URL} .'
                 echo '-----------------'
@@ -18,6 +20,13 @@ pipeline {
                 echo '-----------------'
                 sh 'docker ps | grep docker_html'
                 echo '-----------------'
+            }
+        }
+        stage("push da imagem") {
+            steps {
+                script {
+                    gv.pushApp()
+                }
             }
         }
     }
