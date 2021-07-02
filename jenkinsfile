@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         JOB_DISPLAY_URL = 'doug18dalves/docker-teste:v2'
+        DOCKERHUB_USR = 'doug18dalves'
         DOCKERHUB_CREDENTIALS = credentials('acesso_docker_hub')
     }
     stages {
@@ -23,7 +24,7 @@ pipeline {
         }
         stage("push da imagem") {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker login --username ${DOCKERHUB_USR} --password-stdin ${DOCKERHUB_CREDENTIALS}'
                 echo '-----------------'
                 echo 'Subindo a imagem no docker hub'
                 echo '-----------------'
