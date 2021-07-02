@@ -23,6 +23,7 @@ pipeline {
         }
         stage("push da imagem") {
             steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                 echo '-----------------'
                 echo 'Subindo a imagem no docker hub'
                 echo '-----------------'
