@@ -1,31 +1,29 @@
 pipeline {
-    agent any
     environment {
-        JOB_DISPLAY_URL = 'doug18dalves/docker-teste:v2'
-        DOCKERHUB_USR = 'acesso_docker_hub'
+        imagename = "doug18dalves/docker-teste:v2"
+        registryCredential = 'login_docker_hub'
+        dockerImage = ''
     }
+    agent any
     stages {
-        stage("build da imagem") {
+        stage('Building image') {
             steps {
-                sh 'docker build -t ${JOB_DISPLAY_URL} .'
+                sh 'docker build -t ${imagename} .'
                 echo '-----------------'
                 sh 'docker images | grep docker-teste'
             }
         }
-        stage("deploy da imagem") {
+        stage("start da imagem") {
             steps {
-                sh 'docker run -d --name docker_html -p 6060:3000 ${JOB_DISPLAY_URL}'
+                sh 'docker run -d --name docker_html -p 6060:3000 ${imagename}'
                 echo '-----------------'
                 sh 'docker ps | grep docker_html'
             }
         }
-        stage("push da imagem") {
-            steps {
-                script {
-                    docker.withRegistry( '', DOCKERHUB_USR ) {
-                    dockerImage.push("$BUILD_NUMBER")
-                    dockerImage.push('v2')
-                    }
+        stage('Deploy Image') {
+            steps{
+                withDockerRegistry([ credentialsId: "login_docker_hub", url: "" ]) {
+                    sh 'docker push ${imagename}'
                 }
             }
         }
