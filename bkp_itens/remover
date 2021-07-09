@@ -1,0 +1,32 @@
+pipeline {
+    environment {
+        imageorigem = "docker-teste:latest"
+        name_image = "docker-teste"
+        tag_build = "doug18dalves/docker-teste:$BUILD_NUMBER"
+        container_name = "docker_html"
+        registryCredential = 'login_docker_hub'
+    }
+    agent any
+    stages {
+        stage('Stop container') {
+            steps {
+                sh 'docker ps | grep ${name_image}'
+                sh 'docker stop ${container_name}'
+            }
+        }
+        stage('Remove container') {
+            steps {
+                sh 'docker ps -a | grep ${name_image}'
+                sh 'docker rm ${container_name}'
+            }
+        }
+        stage("Remove a imagem") {
+            steps {
+                sh 'docker images | grep ${tag_build}'
+                sh 'docker rmi ${tag_build}'
+            }
+        }
+    }
+}
+
+// removendo os dados do docker-teste
