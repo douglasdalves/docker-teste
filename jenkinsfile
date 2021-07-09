@@ -1,29 +1,29 @@
 pipeline {
     environment {
-        imagename = "doug18dalves/docker-teste:v2"
+        imageorigem = "docker-teste:latest"
+        name_image = "docker-teste"
+        tag_build = "doug18dalves/docker-teste:$BUILD_NUMBER"
+        container_name = "docker_html"
         registryCredential = 'login_docker_hub'
-        dockerImage = ''
     }
     agent any
     stages {
         stage('Building image') {
             steps {
-                sh 'docker build -t ${imagename} .'
-                echo '-----------------'
-                sh 'docker images | grep docker-teste'
+                sh 'docker build -t ${imageorigem} .'
+                sh 'docker tag ${name_image} ${tag_build}'
+                sh 'docker images | grep ${name_image}'
             }
         }
-        stage("start da imagem") {
+        stage("Start da image") {
             steps {
-                sh 'docker run -d --name docker_html -p 6060:3000 ${imagename}'
-                echo '-----------------'
-                sh 'docker ps | grep docker_html'
+                sh 'docker run -d --name docker_html -p 6060:3000 ${tag_build} && docker ps | grep ${container_name}'
             }
         }
         stage('Deploy Image') {
             steps{
-                withDockerRegistry([ credentialsId: "login_docker_hub", url: "" ]) {
-                    sh 'docker push ${imagename}'
+                withDockerRegistry([ credentialsId: "registryCredential", url: "" ]) {
+                    sh 'docker push ${tag_build}'
                 }
             }
         }
